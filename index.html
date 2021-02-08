@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="style.css" rel="stylesheet">
+  <title>Homepage</title>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1><a href="index.html">Homepage</a></h1>
+
+      <nav>
+        <ul>
+          <li><a href="#" class="addBookmarkButton">Add Bookmark</a></li>
+          <li><a href="rss.html">RSS Feed</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="bookmarks">
+      <div class="addBookmarkForm">
+        <span class="closeBookmarkForm">&times;</span>
+
+        <form class="bookmarkForm">
+          <div class="form-group">
+            <input class="name" type="text" placeholder="Name">
+          </div>
+          <div class="form-group">
+            <input class="url" type="text" placeholder="URL">
+          </div>
+          <div class="form-group">
+            <input type="submit" value="Add Bookmark">
+          </div>
+        </form>
+      </div>
+
+      <div class="bookmarksList">
+
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>&copy; Homepage 2021</p>
+    </div>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>
