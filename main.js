@@ -1,23 +1,38 @@
-let addBookmarkButton = document.querySelector('.addBookmarkButton')
-let addBookmarkForm = document.querySelector('.addBookmarkForm')
-let closeBookmarkForm = document.querySelector('.closeBookmarkForm')
-let bookmarkForm = document.querySelector('.bookmarkForm')
+const addBookmarkButton = document.querySelector('.addBookmarkButton')
+const addBookmarkForm = document.querySelector('.addBookmarkForm')
+const closeBookmarkForm = document.querySelector('.closeBookmarkForm')
+const bookmarkForm = document.querySelector('.bookmarkForm')
+
+const addCategoryButton = document.querySelector('.addCategoryButton')
+const addCategoryForm = document.querySelector('.addCategoryForm')
+const closeCategoryForm = document.querySelector('.closeCategoryForm')
+const categoryForm = document.querySelector('.categoryForm')
 
 window.onload = () => {
-  getBookmarks();
+  getBookmarks()
 }
 
 addBookmarkButton.addEventListener("click", () => {
   addBookmarkForm.style.display = "block"
+  getCategories()
 })
 
 closeBookmarkForm.addEventListener("click", () => {
   addBookmarkForm.style.display = "none"
 })
 
+addCategoryButton.addEventListener("click", () => {
+  addCategoryForm.style.display = "block"
+})
+
+closeCategoryForm.addEventListener("click", () => {
+  addCategoryForm.style.display = "none"
+})
+
 window.addEventListener("click", (e) => {
-  if(e.target == addBookmarkForm) {
+  if(e.target == addBookmarkForm || e.target == addCategoryForm) {
     addBookmarkForm.style.display = "none"
+    addCategoryForm.style.display = "none"
   }
 })
 
@@ -26,6 +41,7 @@ bookmarkForm.addEventListener("submit", (e) => {
 
   let name = document.querySelector('.name').value
   let url = document.querySelector('.url').value
+  let category = document.querySelector('.category').value
 
   if(!validateForm(name, url)) {
     return false
@@ -33,7 +49,8 @@ bookmarkForm.addEventListener("submit", (e) => {
 
   let bookmark = {
     name: name,
-    url: url
+    url: url,
+    category: category
   }
 
   if(localStorage.getItem("bookmarks") === null) {
@@ -50,31 +67,96 @@ bookmarkForm.addEventListener("submit", (e) => {
     localStorage.setItem("bookmarks", JSON.stringify(bookmarks))
   }
 
-  bookmarkForm.reset()
-
-  addBookmarkForm.style.display = "none"
-
-  getBookmarks()
+  location.reload()
 })
 
+categoryForm.addEventListener("submit", (e) => {
+  e.preventDefault()
+
+  let categoryName = document.querySelector('.categoryName').value
+
+  if(!categoryName) {
+    alert("Enter a name")
+  }
+
+  let category = {
+    categoryName: categoryName
+  }
+
+  if(localStorage.getItem("categories") === null) {
+    let categories = []
+
+    categories.push(category)
+
+    localStorage.setItem("categories", JSON.stringify(categories))
+  } else {
+    let categories = JSON.parse(localStorage.getItem("categories"))
+
+    categories.push(category)
+
+    localStorage.setItem("categories", JSON.stringify(categories))
+  }
+
+  location.reload()
+})
+
+function getCategories() {
+  let categories = JSON.parse(localStorage.getItem("categories"))
+  let categoriesList = document.querySelector(".category")
+
+  categoriesList.innerHTML = ""
+
+  for(let i = 0; i < categories.length; i++) {
+    let category = categories[i].categoryName
+
+    categoriesList.innerHTML +=
+      '<option>' + category + '</option>'
+  }
+}
+
 function getBookmarks() {
+  let categories = JSON.parse(localStorage.getItem("categories"))
   let bookmarks = JSON.parse(localStorage.getItem("bookmarks"))
+
   let bookmarksList = document.querySelector(".bookmarksList")
 
-  bookmarksList.innerHTML = ""
+  for(let i = 0; i < categories.length; i++) {
+    let category = categories[i].categoryName
 
-  for(let i = 0; i < bookmarks.length; i++) {
-    let name = bookmarks[i].name
-    let url = bookmarks[i].url
+    let box = document.createElement('div')
+    box.className = 'box'
+    box.innerHTML += '<h2>' + category + '<a class="deleteCategory" onclick="deleteCategory(\'' + category + '\')" href="#">&times;</a>' + '</h2>'
 
-    bookmarksList.innerHTML += 
-      '<div class="bookmark">' +
-        '<h3>' + 
-          '<a target="_blank" href="' + url + '">' + name + '</a>' +
-          '<a class="deleteBookmark" onclick="deleteBookmark(\'' + url + '\')" href="#">&times;</a>' +
-        '</h3>' +
-      '</div>'
+    for(let i = 0; i < bookmarks.length; i++) {
+      let name = bookmarks[i].name
+      let url = bookmarks[i].url
+      let cat = bookmarks[i].category
+
+      if(cat == category) {
+        box.innerHTML += 
+          '<div class="bookmark">' +
+          '<p><a target="_blank" href="' + url + '">' + name + '</a>' +
+          '<a class="deleteBookmark" onclick="deleteBookmark(\'' + url + '\')" href="#">&times;</a></p>'+
+          '</div>'
+      }
+    }
+
+    bookmarksList.appendChild(box)
   }
+}
+
+function deleteCategory(category) {
+  let categories = JSON.parse(localStorage.getItem('categories'))
+
+  for(let i = 0; i < categories.length; i++) {
+    if(categories[i].categoryName == category) {
+      categories.splice(i, 1)
+    }
+  }
+
+  localStorage.setItem('categories', JSON.stringify(categories))
+
+  location.reload()
 }
 
 function deleteBookmark(url) {
@@ -88,7 +170,7 @@ function deleteBookmark(url) {
 
   localStorage.setItem('bookmarks', JSON.stringify(bookmarks))
 
-  getBookmarks()
+  location.reload()
 }
 
 function validateForm(name, url) {

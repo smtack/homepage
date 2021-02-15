@@ -10,10 +10,11 @@
   <div class="container">
     <div class="header">
       <h1><a href="index.html">Homepage</a></h1>
-
+      
       <nav>
         <ul>
           <li><a href="#" class="addBookmarkButton">Add Bookmark</a></li>
+          <li><a href="#" class="addCategoryButton">Add Category</a></li>
           <li><a href="rss.html">RSS Feed</a></li>
         </ul>
       </nav>
@@ -31,18 +32,30 @@
             <input class="url" type="text" placeholder="URL">
           </div>
           <div class="form-group">
+            <select class="category">
+            </select>
+          </div>
+          <div class="form-group">
             <input type="submit" value="Add Bookmark">
           </div>
         </form>
       </div>
 
-      <div class="bookmarksList">
+      <div class="addCategoryForm">
+        <span class="closeCategoryForm">&times;</span>
 
+        <form class="categoryForm">
+          <div class="form-group">
+            <input class="categoryName" type="text" placeholder="Name">
+          </div>
+          <div class="form-group">
+            <input type="submit" value="Add Category">
+          </div>
+        </form>
       </div>
-    </div>
 
-    <div class="footer">
-      <p>&copy; Homepage 2021</p>
+      <div class="bookmarksList">
+      </div>
     </div>
   </div>
   <script src="main.js"></script>
