@@ -1,3 +1,8 @@
+const menuButton = document.querySelector('.menuButton')
+const menu = document.querySelector('.menu')
+
+const datetime = document.querySelector('.datetime')
+
 const addBookmarkButton = document.querySelector('.addBookmarkButton')
 const addBookmarkForm = document.querySelector('.addBookmarkForm')
 const closeBookmarkForm = document.querySelector('.closeBookmarkForm')
@@ -8,9 +13,22 @@ const addCategoryForm = document.querySelector('.addCategoryForm')
 const closeCategoryForm = document.querySelector('.closeCategoryForm')
 const categoryForm = document.querySelector('.categoryForm')
 
+const bookmarksList = document.querySelector(".bookmarksList")
+
 window.onload = () => {
+  getDateTime()
   getBookmarks()
 }
+
+menuButton.addEventListener("click", () => {
+  if(menu.style.display == "none") {
+    menu.style.display = "block"
+    datetime.style.marginTop = "200px"
+  } else {
+    menu.style.display = "none"
+    datetime.style.marginTop = "0"
+  }
+})
 
 addBookmarkButton.addEventListener("click", () => {
   addBookmarkForm.style.display = "block"
@@ -100,6 +118,18 @@ categoryForm.addEventListener("submit", (e) => {
   location.reload()
 })
 
+function getDateTime() {
+  let date = new Date()
+  let dateString = date.toDateString()
+  let timeString = date.toLocaleTimeString()
+  
+  datetime.innerHTML = 
+    `<h2>${dateString}</h2>
+    <h3>${timeString}</h3>`
+
+  setTimeout(getDateTime, 1000)
+}
+
 function getCategories() {
   let categories = JSON.parse(localStorage.getItem("categories"))
   let categoriesList = document.querySelector(".category")
@@ -118,7 +148,9 @@ function getBookmarks() {
   let categories = JSON.parse(localStorage.getItem("categories"))
   let bookmarks = JSON.parse(localStorage.getItem("bookmarks"))
 
-  let bookmarksList = document.querySelector(".bookmarksList")
+  if(categories == false) {
+    bookmarksList.innerHTML += '<p class="message">You don\'t have any bookmarks. Add a category.</p>'
+  }
 
   for(let i = 0; i < categories.length; i++) {
     let category = categories[i].categoryName
